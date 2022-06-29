@@ -22,10 +22,25 @@ public class FilmController {
         return filmMap.values();
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public ResponseEntity<Film> createOrUpdateFilm(@Valid @RequestBody Film film) {
-        filmMap.put(film.getId(), film);
-        log.debug(String.format("Обновление/Создание объекта: %s", film.toString()));
+    @PostMapping
+    public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
+        int id = filmMap.size();
+        film.setId(id);
+        filmMap.put(id, film);
+        log.debug(String.format("Создание объекта фильма: %s", film.toString()));
+        return ResponseEntity.ok(film);
+    }
+
+    @PutMapping
+    public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
+        if (filmMap.containsKey(film.getId())) {
+            filmMap.put(film.getId(), film);
+        } else {
+            int id = filmMap.size();
+            film.setId(id);
+            filmMap.put(id, film);
+        }
+        log.debug(String.format("Обновление объекта фильма: %s", film.toString()));
         return ResponseEntity.ok(film);
     }
 

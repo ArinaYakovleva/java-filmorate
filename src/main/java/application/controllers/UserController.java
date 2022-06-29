@@ -22,11 +22,26 @@ public class UserController {
         return userMap.values();
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public User createOrUpdateUser(@Valid @RequestBody User user) {
-        userMap.put(user.getId(), user);
-        log.debug(String.format("Обновление/Создание объекта: %s", user.toString()));
-        return user;
+    @PostMapping
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        int id = userMap.size();
+        user.setId(id);
+        userMap.put(id, user);
+        log.debug(String.format("Создание объекта юзера: %s", user.toString()));
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
+        if (userMap.containsKey(user.getId())) {
+            userMap.put(user.getId(), user);
+        } else {
+            int id = userMap.size();
+            user.setId(id);
+            userMap.put(id, user);
+        }
+        log.debug(String.format("Обновление объекта юзера: %s", user.toString()));
+        return ResponseEntity.ok(user);
     }
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})

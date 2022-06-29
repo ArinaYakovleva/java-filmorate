@@ -1,5 +1,6 @@
 package application.model;
 
+import lombok.Builder;
 import lombok.Data;
 import utils.constraints.EmailConstraint;
 import utils.constraints.LoginConstraint;
