@@ -43,8 +43,7 @@ public class UserController {
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
         if (!userMap.containsKey(user.getId())) {
-            commonSize++;
-            user.setId(commonSize);
+            throw new ValidationException("Пользователь не найден");
         }
         userMap.put(user.getId(), user);
         log.debug(String.format("Обновление объекта юзера: %s", user.toString()));
