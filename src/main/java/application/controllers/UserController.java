@@ -10,6 +10,7 @@ import utils.Error;
 import utils.exception.ValidationException;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -20,9 +21,18 @@ public class UserController {
     private int commonSize = 0;
 
     public void validate(User user) {
+        if (user.getName() == null) {
+            throw new ValidationException("Имя пользователя не может быть null");
+        }
+        if (user.getName().isBlank() || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
         if (user.getEmail().isEmpty() || !user.getEmail()
-                .matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$")) {
+                .matches(".+[@].+[\\\\.].+")) {
             throw new ValidationException("Email должен быть валидным\"");
+        }
+        if (user.getBirthday().isEqual(LocalDate.now()) || user.getBirthday().isBefore(LocalDate.now())) {
+            throw new ValidationException("Невалидная дата рождения");
         }
     }
 
@@ -33,6 +43,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        validate(user);
         commonSize++;
         user.setId(commonSize);
         userMap.put(user.getId(), user);

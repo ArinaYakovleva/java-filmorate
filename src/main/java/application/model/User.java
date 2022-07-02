@@ -20,7 +20,6 @@ public class User {
     @LoginConstraint
     private String login;
 
-    @NotNull(message = "Поле name не должно быть пустым, иначе используется login")
     private String name = login;
 
     @Past(message = "Дата рождения не должна быть больше текущей")
