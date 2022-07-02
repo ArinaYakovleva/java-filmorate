@@ -31,7 +31,7 @@ public class UserController {
                 .matches(".+[@].+[\\\\.].+")) {
             throw new ValidationException("Email должен быть валидным\"");
         }
-        if (user.getBirthday().isEqual(LocalDate.now()) || user.getBirthday().isBefore(LocalDate.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Невалидная дата рождения");
         }
     }

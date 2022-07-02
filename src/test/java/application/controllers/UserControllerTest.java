@@ -46,7 +46,7 @@ class UserControllerTest {
 
     @Test
     public void birthdayTest() {
-        user.setBirthday(LocalDate.of(2022, 6, 29));
+        user.setBirthday(LocalDate.of(2022, 7, 30));
         Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
     }
 }
