@@ -11,7 +11,6 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-//@NotNull(message = "Поле email не должно равняться null")
 @Email(message = "Email должен быть валидным")
 @NotEmpty(message = "Поле email не должно быть пустым")
 @Target({METHOD, FIELD, ANNOTATION_TYPE})

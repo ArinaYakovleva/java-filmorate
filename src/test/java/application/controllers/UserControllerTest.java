@@ -1,25 +1,51 @@
 package application.controllers;
 
+import application.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.Assertions;
+import utils.exception.ValidationException;
+
+import java.time.LocalDate;
 
 
-@WebMvcTest(controllers = {UserController.class})
 class UserControllerTest {
-    @Autowired
-    MockMvc mockMvc;
-
+    static User user;
+    static UserController userController = new UserController();
+    @BeforeAll
+    public static void init() {
+        user = new User();
+        user.setBirthday(LocalDate.of(1997, 5, 29));
+        user.setEmail("a@mail.ru");
+        user.setLogin("login");
+        user.setName("name");
+    }
 
     @Test
-    void noNameTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/films")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"email\":\"user@server.com\"}"))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    public void testEmail() {
+        user.setEmail("aaa");
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        user.setEmail("");
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+    }
+
+    @Test
+    public void loginTest() {
+        user.setLogin("");
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        user.setLogin(" j j");
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+    }
+
+    @Test
+    public void nameTest() {
+        user.setName(null);
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+    }
+
+    @Test
+    public void birthdayTest() {
+        user.setBirthday(LocalDate.of(2022, 6, 29));
+        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
     }
 }

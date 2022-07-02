@@ -1,7 +1,7 @@
 package application.model;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import utils.constraints.EmailConstraint;
 import utils.constraints.LoginConstraint;
 
@@ -10,6 +10,7 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class User {
     private int id;
 

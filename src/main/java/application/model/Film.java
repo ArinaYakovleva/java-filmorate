@@ -13,14 +13,14 @@ public class Film {
     private int id;
 
     @NotNull(message = "Поле name не должно быть пустым")
-    private final String name;
+    private String name;
 
     @DescriptionConstraint
-    private final String description;
+    private String description;
 
     @ReleaseDateConstraint
-    private final LocalDate releaseDate;
+    private LocalDate releaseDate;
 
     @Positive
-    private final int duration;
+    private int duration;
 }

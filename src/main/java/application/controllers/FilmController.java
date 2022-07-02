@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import utils.Error;
+import utils.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -16,6 +17,15 @@ import java.util.*;
 @Slf4j
 public class FilmController {
     private final Map<Integer, Film> filmMap = new HashMap<>();
+    private int commonSize = 0;
+
+    public void validate(Film film) {
+        if (film.getName().isEmpty() || film.getName() == null) {
+            throw new ValidationException("Поле name не должно быть пустым");
+        } if (film.getDuration() <= 0) {
+            throw new ValidationException("Дата релиза не должна быть раньше 28 декабря 1895 года");
+        }
+    }
 
     @GetMapping
     public Collection<Film> getFilmsList() {
@@ -24,22 +34,20 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
-        int id = filmMap.size();
-        film.setId(id);
-        filmMap.put(id, film);
+        commonSize++;
+        film.setId(commonSize);
+        filmMap.put(film.getId(), film);
         log.debug(String.format("Создание объекта фильма: %s", film.toString()));
         return ResponseEntity.ok(film);
     }
 
     @PutMapping
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        if (filmMap.containsKey(film.getId())) {
-            filmMap.put(film.getId(), film);
-        } else {
-            int id = filmMap.size();
-            film.setId(id);
-            filmMap.put(id, film);
+        if (!filmMap.containsKey(film.getId())) {
+            commonSize++;
+            film.setId(commonSize);
         }
+        filmMap.put(film.getId(), film);
         log.debug(String.format("Обновление объекта фильма: %s", film.toString()));
         return ResponseEntity.ok(film);
     }
