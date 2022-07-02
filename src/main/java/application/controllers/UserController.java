@@ -21,10 +21,10 @@ public class UserController {
     private int commonSize = 0;
 
     public void validate(User user) {
-        if (user.getName() == null) {
+        if (user.getName() == null || user.getName().isEmpty()) {
             throw new ValidationException("Имя пользователя не может быть null");
         }
-        if (user.getName().isBlank() || user.getName().isEmpty()) {
+        if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getEmail().isEmpty() || !user.getEmail()
