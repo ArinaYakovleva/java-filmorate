@@ -25,6 +25,7 @@ public class UserController {
             throw new ValidationException("Email должен быть валидным\"");
         }
     }
+
     @GetMapping
     public Collection<User> getUsersList() {
         return userMap.values();

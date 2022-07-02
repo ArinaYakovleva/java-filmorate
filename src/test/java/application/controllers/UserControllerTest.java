@@ -1,9 +1,9 @@
 package application.controllers;
 
 import application.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 import utils.exception.ValidationException;
 
 import java.time.LocalDate;
@@ -12,6 +12,7 @@ import java.time.LocalDate;
 class UserControllerTest {
     static User user;
     static UserController userController = new UserController();
+
     @BeforeAll
     public static void init() {
         user = new User();

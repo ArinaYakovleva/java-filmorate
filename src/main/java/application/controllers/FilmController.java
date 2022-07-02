@@ -22,7 +22,8 @@ public class FilmController {
     public void validate(Film film) {
         if (film.getName().isEmpty() || film.getName() == null) {
             throw new ValidationException("Поле name не должно быть пустым");
-        } if (film.getDuration() <= 0) {
+        }
+        if (film.getDuration() <= 0) {
             throw new ValidationException("Дата релиза не должна быть раньше 28 декабря 1895 года");
         }
     }
