@@ -70,4 +70,11 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Map<String, String>> handleValidateException(ValidationException e) {
+        log.warn(e.getMessage());
+
+        return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
+    }
 }

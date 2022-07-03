@@ -35,6 +35,7 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<Film> createFilm(@Valid @RequestBody Film film) {
+        validate(film);
         commonSize++;
         film.setId(commonSize);
         filmMap.put(film.getId(), film);
@@ -45,8 +46,7 @@ public class FilmController {
     @PutMapping
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
         if (!filmMap.containsKey(film.getId())) {
-            commonSize++;
-            film.setId(commonSize);
+            throw new ValidationException("Фильм не найден");
         }
         filmMap.put(film.getId(), film);
         log.debug(String.format("Обновление объекта фильма: %s", film.toString()));
@@ -61,5 +61,12 @@ public class FilmController {
             log.error(String.format("Ошибка при создании/Обновлении объекта: %s", error.getDefaultMessage()));
         }
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Map<String, String>> handleValidateException(ValidationException e) {
+        log.warn(e.getMessage());
+
+        return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
     }
 }
