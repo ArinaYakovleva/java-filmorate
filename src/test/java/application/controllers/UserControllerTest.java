@@ -48,7 +48,7 @@ class UserControllerTest {
     public void nameTest() {
         user.setName(null);
         userController.createUser(user);
-        Assertions.assertEquals(null, user.getName(),
+        Assertions.assertEquals(user.getLogin(), user.getName(),
                 "Поле name не должно быть пустым");
     }
 
