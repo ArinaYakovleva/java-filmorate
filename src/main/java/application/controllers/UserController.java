@@ -1,40 +1,20 @@
 package application.controllers;
 
-import application.model.User;
+import application.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import utils.Error;
-import utils.exception.ValidationException;
+import utils.exceptions.ValidationException;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController {
+public class UserController extends ExceptionHandlerController {
     private final Map<Integer, User> userMap = new HashMap<>();
     private int commonSize = 0;
-
-    public void validate(User user) {
-        if (user.getName() == null) {
-            throw new ValidationException("Имя пользователя не может быть null");
-        }
-        if (user.getName().isBlank() || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getEmail().isEmpty() || !user.getEmail()
-                .matches(".+[@].+[\\\\.].+")) {
-            throw new ValidationException("Email должен быть валидным\"");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Невалидная дата рождения");
-        }
-    }
 
     @GetMapping
     public Collection<User> getUsersList() {
@@ -43,9 +23,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        validate(user);
         commonSize++;
         user.setId(commonSize);
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
         userMap.put(user.getId(), user);
         log.debug(String.format("Создание объекта юзера: %s", user.toString()));
         return ResponseEntity.ok(user);
@@ -61,20 +43,4 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    public ResponseEntity<List<Error>> getError(MethodArgumentNotValidException ex) {
-        List<Error> errors = new ArrayList<>();
-        for (FieldError error : ex.getFieldErrors()) {
-            errors.add(new Error(error.getField(), error.getDefaultMessage()));
-            log.error(String.format("Ошибка при создании/Обновлении объекта: %s", error.getDefaultMessage()));
-        }
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Map<String, String>> handleValidateException(ValidationException e) {
-        log.warn(e.getMessage());
-
-        return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
-    }
 }

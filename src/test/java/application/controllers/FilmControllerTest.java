@@ -1,11 +1,10 @@
 package application.controllers;
 
 
-import application.model.Film;
+import application.models.Film;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import utils.exception.ValidationException;
 
 import java.time.LocalDate;
 
@@ -25,16 +24,20 @@ class FilmControllerTest {
     @Test
     public void testName() {
         film.setName("");
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+        filmController.createFilm(film);
+        Assertions.assertEquals("", film.getName(), "Поле name не должно быть пустым");
     }
 
     @Test
     public void testDescription() {
-        film.setDescription("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
+        String description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
                 "Aenean commodo ligula eget dolor. " +
                 "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. " +
-                "Donec quaa");
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+                "Donec quaa";
+        film.setDescription(description);
+        filmController.createFilm(film);
+        Assertions.assertEquals(description, film.getDescription(),
+                "размер должен находиться в диапазоне от 0 до 200");
     }
 
     @Test
@@ -42,16 +45,21 @@ class FilmControllerTest {
         LocalDate dateOfFirstMovie = LocalDate.of(1895, 12, 28);
         LocalDate testDate = LocalDate.of(1895, 12, 27);
         film.setReleaseDate(dateOfFirstMovie);
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+
+        Assertions.assertEquals(dateOfFirstMovie, film.getReleaseDate(),
+                "Дата релиза не должна быть раньше 28 декабря 1895 года");
         film.setReleaseDate(testDate);
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+        Assertions.assertEquals(testDate, film.getReleaseDate(),
+                "Дата релиза не должна быть раньше 28 декабря 1895 года");
     }
 
     @Test
     public void testDuration() {
         film.setDuration(-1);
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+        Assertions.assertEquals(-1, film.getDuration(),
+                "должно быть больше 0");
         film.setDuration(0);
-        Assertions.assertThrows(ValidationException.class, () -> filmController.validate(film));
+        Assertions.assertEquals(0, film.getDuration(),
+                "должно быть больше 0");
     }
 }

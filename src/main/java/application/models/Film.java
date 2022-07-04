@@ -1,11 +1,12 @@
-package application.model;
+package application.models;
 
 import lombok.Data;
-import utils.constraints.DescriptionConstraint;
+
 import utils.constraints.ReleaseDateConstraint;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
@@ -15,7 +16,7 @@ public class Film {
     @NotNull(message = "Поле name не должно быть пустым")
     private String name;
 
-    @DescriptionConstraint
+    @Size(max=200)
     private String description;
 
     @ReleaseDateConstraint

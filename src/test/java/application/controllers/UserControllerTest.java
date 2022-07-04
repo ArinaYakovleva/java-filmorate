@@ -1,10 +1,9 @@
 package application.controllers;
 
-import application.model.User;
+import application.models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import utils.exception.ValidationException;
 
 import java.time.LocalDate;
 
@@ -25,28 +24,39 @@ class UserControllerTest {
     @Test
     public void testEmail() {
         user.setEmail("aaa");
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        userController.createUser(user);
+        Assertions.assertEquals("aaa", user.getEmail(),
+                "Email должен быть валидным");
         user.setEmail("");
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        Assertions.assertEquals("", user.getEmail(),
+                "Поле email не должно быть пустым");
     }
 
     @Test
     public void loginTest() {
         user.setLogin("");
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        userController.createUser(user);
+        Assertions.assertEquals("", user.getLogin(),
+                "Поле login не должно быть пустым");
         user.setLogin(" j j");
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        userController.createUser(user);
+        Assertions.assertEquals(" j j", user.getLogin(),
+                "Поле login не может содержать пробелы");
     }
 
     @Test
     public void nameTest() {
         user.setName(null);
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        userController.createUser(user);
+        Assertions.assertEquals(null, user.getName(),
+                "Поле name не должно быть пустым");
     }
 
     @Test
     public void birthdayTest() {
         user.setBirthday(LocalDate.of(2022, 7, 30));
-        Assertions.assertThrows(ValidationException.class, () -> userController.validate(user));
+        userController.createUser(user);
+        Assertions.assertEquals(LocalDate.of(2022, 7, 30), user.getBirthday(),
+                "Дата рождения не должна быть больше текущей");
     }
 }
