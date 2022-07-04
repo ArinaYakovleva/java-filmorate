@@ -1,7 +1,6 @@
 package application.models;
 
 import lombok.Data;
-
 import utils.constraints.ReleaseDateConstraint;
 
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +17,7 @@ public class Film {
     @NotEmpty
     private String name;
 
-    @Size(max=200)
+    @Size(max = 200)
     private String description;
 
     @ReleaseDateConstraint

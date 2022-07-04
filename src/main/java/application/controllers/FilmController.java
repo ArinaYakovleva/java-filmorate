@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import utils.exceptions.ValidationException;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
