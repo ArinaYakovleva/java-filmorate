@@ -20,40 +20,41 @@ class UserControllerTest {
     @Test
     public void testEmail() throws Exception {
         String jsonStr = String.format(formatString, 1, "", "login", "name", "2022-05-05");
-        mockMvc.perform(post("/users")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        performBadRequest(jsonStr);
     }
 
     @Test
     public void loginTest() throws Exception {
         String jsonStr = String.format(formatString, 1, "mail@mail.ru", "", "name", "2022-05-05");
-        mockMvc.perform(post("/users")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        performBadRequest(jsonStr);
     }
 
     @Test
     public void nameTest() throws Exception {
-        mockMvc.perform(post("/users")
-                .content("{\"id\":1,\"email\":\"mail@mail.ru\",\"login\":\"login\",\"name\":null," +
-                        "\"birthday\":\"2000-05-03\"}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        String jsonStr = "{\"id\":1,\"email\":\"mail@mail.ru\",\"login\":\"login\",\"name\":null," +
+                "\"birthday\":\"2000-05-03\"}";
+        performOKRequest(jsonStr);
     }
 
     @Test
     public void birthdayTest() throws Exception {
         String jsonStr = String.format(formatString, 1, "a@mail.ru", "login", "name", "2022-07-30");
+        performBadRequest(jsonStr);
+    }
+
+    private void performBadRequest(String jsonStr) throws Exception {
         mockMvc.perform(post("/users")
                 .content(jsonStr)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    private void performOKRequest(String jsonStr) throws Exception {
+        mockMvc.perform(post("/users")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

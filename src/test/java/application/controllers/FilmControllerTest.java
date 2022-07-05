@@ -20,11 +20,7 @@ class FilmControllerTest {
     @Test
     public void testName() throws Exception {
         String jsonStr = String.format(formatString, 1, "", "description", 120, "2022-05-05");
-        mockMvc.perform(post("/films")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        performBadRequest(jsonStr);
     }
 
 
@@ -36,28 +32,23 @@ class FilmControllerTest {
                 "Donec quaa";
         String jsonStr = String.format(formatString, 1, "name", description, 120, "2022-05-05");
 
-        mockMvc.perform(post("/films")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        performBadRequest(jsonStr);
     }
 
     @Test
     public void testReleaseDate() throws Exception {
         String jsonStr = String.format(formatString, 1, "name", "description", 120, "1895-12-27");
 
-        mockMvc.perform(post("/films")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        performBadRequest(jsonStr);
     }
 
     @Test
     public void testDuration() throws Exception {
         String jsonStr = String.format(formatString, 1, "name", "description", 0, "2000-12-27");
+        performBadRequest(jsonStr);
+    }
 
+    private void performBadRequest(String jsonStr) throws Exception {
         mockMvc.perform(post("/films")
                 .content(jsonStr)
                 .contentType(MediaType.APPLICATION_JSON))
