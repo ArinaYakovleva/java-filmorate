@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController extends ExceptionHandlerController {
+public class FilmController {
     private final Map<Integer, Film> filmMap = new HashMap<>();
     private int commonSize = 0;
 

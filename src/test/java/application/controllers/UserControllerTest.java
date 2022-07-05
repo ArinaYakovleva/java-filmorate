@@ -1,62 +1,59 @@
 package application.controllers;
 
-import application.models.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@WebMvcTest(UserController.class)
 class UserControllerTest {
-    static User user;
-    static UserController userController = new UserController();
+    final String formatString = "{\"id\":%d,\"email\":\"%s\",\"login\":\"%s\",\"name\":\"%s\"," +
+            "\"birthday\":\"%s\"}";
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeAll
-    public static void init() {
-        user = new User();
-        user.setBirthday(LocalDate.of(1997, 5, 29));
-        user.setEmail("a@mail.ru");
-        user.setLogin("login");
-        user.setName("name");
+    @Test
+    public void testEmail() throws Exception {
+        String jsonStr = String.format(formatString, 1, "", "login", "name", "2022-05-05");
+        mockMvc.perform(post("/users")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testEmail() {
-        user.setEmail("aaa");
-        userController.createUser(user);
-        Assertions.assertEquals("aaa", user.getEmail(),
-                "Email должен быть валидным");
-        user.setEmail("");
-        Assertions.assertEquals("", user.getEmail(),
-                "Поле email не должно быть пустым");
+    public void loginTest() throws Exception {
+        String jsonStr = String.format(formatString, 1, "mail@mail.ru", "", "name", "2022-05-05");
+        mockMvc.perform(post("/users")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void loginTest() {
-        user.setLogin("");
-        userController.createUser(user);
-        Assertions.assertEquals("", user.getLogin(),
-                "Поле login не должно быть пустым");
-        user.setLogin(" j j");
-        userController.createUser(user);
-        Assertions.assertEquals(" j j", user.getLogin(),
-                "Поле login не может содержать пробелы");
+    public void nameTest() throws Exception {
+        mockMvc.perform(post("/users")
+                .content("{\"id\":1,\"email\":\"mail@mail.ru\",\"login\":\"login\",\"name\":null," +
+                        "\"birthday\":\"2000-05-03\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void nameTest() {
-        user.setName(null);
-        userController.createUser(user);
-        Assertions.assertEquals(user.getLogin(), user.getName(),
-                "Поле name не должно быть пустым");
-    }
-
-    @Test
-    public void birthdayTest() {
-        user.setBirthday(LocalDate.of(2022, 7, 30));
-        userController.createUser(user);
-        Assertions.assertEquals(LocalDate.of(2022, 7, 30), user.getBirthday(),
-                "Дата рождения не должна быть больше текущей");
+    public void birthdayTest() throws Exception {
+        String jsonStr = String.format(formatString, 1, "a@mail.ru", "login", "name", "2022-07-30");
+        mockMvc.perform(post("/users")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

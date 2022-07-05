@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController extends ExceptionHandlerController {
+public class UserController {
     private final Map<Integer, User> userMap = new HashMap<>();
     private int commonSize = 0;
 

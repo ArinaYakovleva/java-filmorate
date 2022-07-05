@@ -1,65 +1,67 @@
 package application.controllers;
 
-
-import application.models.Film;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(FilmController.class)
 class FilmControllerTest {
-    static FilmController filmController;
-    static Film film;
-
-    @BeforeAll
-    public static void init() {
-        film = new Film();
-        film.setName("Name");
-        film.setDescription("description");
-        film.setReleaseDate(LocalDate.of(1895, 12, 29));
-        filmController = new FilmController();
-    }
+    final String formatString = "{\"id\":%d,\"name\":\"%s\",\"description\":\"%s\",\"duration\":%d," +
+            "\"releaseDate\":\"%s\"}";
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
-    public void testName() {
-        film.setName("");
-        filmController.createFilm(film);
-        Assertions.assertEquals("", film.getName(), "Поле name не должно быть пустым");
+    public void testName() throws Exception {
+        String jsonStr = String.format(formatString, 1, "", "description", 120, "2022-05-05");
+        mockMvc.perform(post("/films")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
+
     @Test
-    public void testDescription() {
+    public void testDescription() throws Exception {
         String description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
                 "Aenean commodo ligula eget dolor. " +
                 "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. " +
                 "Donec quaa";
-        film.setDescription(description);
-        filmController.createFilm(film);
-        Assertions.assertEquals(description, film.getDescription(),
-                "размер должен находиться в диапазоне от 0 до 200");
+        String jsonStr = String.format(formatString, 1, "name", description, 120, "2022-05-05");
+
+        mockMvc.perform(post("/films")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testReleaseDate() {
-        LocalDate dateOfFirstMovie = LocalDate.of(1895, 12, 28);
-        LocalDate testDate = LocalDate.of(1895, 12, 27);
-        film.setReleaseDate(dateOfFirstMovie);
+    public void testReleaseDate() throws Exception {
+        String jsonStr = String.format(formatString, 1, "name", "description", 120, "1895-12-27");
 
-        Assertions.assertEquals(dateOfFirstMovie, film.getReleaseDate(),
-                "Дата релиза не должна быть раньше 28 декабря 1895 года");
-        film.setReleaseDate(testDate);
-        Assertions.assertEquals(testDate, film.getReleaseDate(),
-                "Дата релиза не должна быть раньше 28 декабря 1895 года");
+        mockMvc.perform(post("/films")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testDuration() {
-        film.setDuration(-1);
-        Assertions.assertEquals(-1, film.getDuration(),
-                "должно быть больше 0");
-        film.setDuration(0);
-        Assertions.assertEquals(0, film.getDuration(),
-                "должно быть больше 0");
+    public void testDuration() throws Exception {
+        String jsonStr = String.format(formatString, 1, "name", "description", 0, "2000-12-27");
+
+        mockMvc.perform(post("/films")
+                .content(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
