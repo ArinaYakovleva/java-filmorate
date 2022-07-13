@@ -1,17 +1,21 @@
-package application.controllers;
+package application.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import utils.Error;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import util.Error;
+import util.exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class ExceptionHandlerController {
 
@@ -23,5 +27,12 @@ public class ExceptionHandlerController {
             log.error(String.format("Ошибка при создании/Обновлении объекта: %s", error.getDefaultMessage()));
         }
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error handleNotFoundException(NotFoundException e) {
+        log.error("Ошибка при получении, элемент не найден");
+        return new Error("error", e.getMessage());
     }
 }

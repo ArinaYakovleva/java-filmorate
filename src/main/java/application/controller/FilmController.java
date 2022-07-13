@@ -1,10 +1,10 @@
-package application.controllers;
+package application.controller;
 
-import application.models.Film;
+import application.model.Film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utils.exceptions.ValidationException;
+import util.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.util.Collection;

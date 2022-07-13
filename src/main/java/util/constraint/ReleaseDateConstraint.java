@@ -1,4 +1,4 @@
-package utils.constraints;
+package util.constraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
