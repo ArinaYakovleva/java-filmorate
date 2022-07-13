@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import util.exception.CreateException;
 import util.exception.NotFoundException;
-import util.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -62,16 +61,19 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{userId}")
     public void likeFilm(@PathVariable int id, @PathVariable int userId) {
+        log.debug(String.format("Лайк фильма с ID %d у пользователя %d", id, userId));
         filmService.likeFilm(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void dislikeFilm(@PathVariable int id, @PathVariable int userId) {
+        log.debug(String.format("Удаления лайка фильма с ID %d у пользователя %d", id, userId));
         filmService.dislikeFilm(id, userId);
     }
 
     @DeleteMapping("/{id}")
     public void deleteFilm(@PathVariable int id) {
+        log.debug(String.format("Удаления фильма с ID %d", id));
         filmService
                 .deleteItem(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Фильм с ID %d не найден", id)));

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class InMemoryFilmStorage extends CommonStorage<Film>{
+public class InMemoryFilmStorage extends CommonStorage<Film> {
 }

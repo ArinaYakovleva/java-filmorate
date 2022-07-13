@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import util.exception.CreateException;
 import util.exception.NotFoundException;
-import util.exception.ValidationException;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -32,7 +31,7 @@ public class UserController {
     public User getUser(@PathVariable int userId) {
         return userService
                 .findItem(userId)
-                .orElseThrow(() ->new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
     }
 
     @GetMapping("/users/{id}/friends")
@@ -63,6 +62,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+        log.debug(String.format("Добавление в друзья пользователя с ID %d у пользователя %d", friendId, id));
         User user = userService.findItem(id).orElseThrow(
                 () -> new NotFoundException(String.format("Пользователь с ID %d не найден", id)));
         User friend = userService.findItem(friendId)
@@ -72,12 +72,14 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable int userId) {
+        log.debug(String.format("Удаление пользователя с ID %d", userId));
         userService.deleteItem(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+        log.debug(String.format("Удаление друга с ID %d у пользователя %d", friendId, id));
         User user = userService.findItem(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", id)));
         User friend = userService.findItem(friendId)

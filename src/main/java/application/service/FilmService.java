@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
-public class FilmService extends CommonService<Film>{
+public class FilmService extends CommonService<Film> {
     private final Storage<User> userStorage;
 
     public FilmService(Storage<Film> storage, Storage<User> userStorage) {
