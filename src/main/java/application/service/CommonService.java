@@ -31,8 +31,8 @@ public abstract class CommonService<T extends CommonDataModel> {
     }
 
     public Optional<T> updateItem(T item) {
-        if (!storage.findAll().contains(item)) {
-            throw new NotFoundException(String.format("Объект с ID %d не найден", item.getId()));
+        if (!storage.findItem(item.getId()).isPresent()) {
+            throw new NotFoundException(String.format("Пользователь с ID %d не найден", item.getId()));
         }
         return storage.updateItem(item);
     }

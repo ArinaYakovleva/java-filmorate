@@ -47,6 +47,9 @@ public class UserController {
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         log.debug(String.format("Создание пользователя: %s", user.toString()));
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
         return userService.createItem(user)
                 .orElseThrow(
                         () -> new CreateException(String.format("Ошибка при создани пользователя: %s", user.toString())));
