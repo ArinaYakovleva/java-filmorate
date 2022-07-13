@@ -1,6 +1,7 @@
 package application.storage;
 
 import application.model.CommonDataModel;
+import util.exception.NotFoundException;
 import util.exception.ValidationException;
 
 import java.util.Collection;
@@ -36,7 +37,7 @@ public abstract class CommonStorage<T extends CommonDataModel> implements Storag
     @Override
     public Optional<T> updateItem(T item) {
         if (findItem(item.getId()).isEmpty()) {
-            throw new ValidationException("Пользователь не найден");
+            throw new NotFoundException("Не найден");
         }
         list.put(item.getId(), item);
         return Optional.of(item);

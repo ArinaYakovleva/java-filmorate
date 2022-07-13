@@ -34,7 +34,7 @@ public class UserController {
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
     }
 
-    @GetMapping("/users/{id}/friends")
+    @GetMapping("/{id}/friends")
     public Collection<User> getUserFriends(@PathVariable int id) {
         return userService.getUserFriends(id);
     }
