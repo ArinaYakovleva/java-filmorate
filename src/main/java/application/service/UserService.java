@@ -34,11 +34,11 @@ public class UserService extends CommonService<User> {
 
     public List<User> getCommonFriends(int userId, int friendId) {
         Set<Integer> userFriends = storage.findItem(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"))
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)))
                 .getFriends();
 
         Set<Integer> friendFriends = storage.findItem(friendId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"))
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", friendId)))
                 .getFriends();
 
         Set<Integer> commonIds = new HashSet<>(userFriends);
@@ -46,7 +46,8 @@ public class UserService extends CommonService<User> {
 
         return commonIds
                 .stream()
-                .map((id) -> storage.findItem(id).orElseThrow(() -> new NotFoundException("Пользователь не найден")))
+                .map((id) -> storage.findItem(id).orElseThrow(() ->
+                        new NotFoundException(String.format("Пользователь с ID %d не найден", id))))
                 .collect(Collectors.toList());
     }
 }

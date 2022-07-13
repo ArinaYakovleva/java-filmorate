@@ -2,7 +2,6 @@ package application.storage;
 
 import application.model.CommonDataModel;
 import util.exception.NotFoundException;
-import util.exception.ValidationException;
 
 import java.util.Collection;
 import java.util.Map;
