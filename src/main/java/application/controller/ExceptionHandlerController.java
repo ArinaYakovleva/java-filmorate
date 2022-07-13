@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import util.Error;
+import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionHandlerController {
-
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<List<Error>> handleException(MethodArgumentNotValidException ex) {
         List<Error> errors = new ArrayList<>();
@@ -33,6 +33,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Error handleNotFoundException(NotFoundException e) {
         log.error("Ошибка при получении, элемент не найден");
+        return new Error("error", e.getMessage());
+    }
+
+    @ExceptionHandler(CreateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Error handleCreateException(CreateException e) {
+        log.error("Ошибка при создании");
         return new Error("error", e.getMessage());
     }
 }
