@@ -4,7 +4,6 @@ import application.model.User;
 import application.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.*;
@@ -27,12 +26,27 @@ public class InMemoryUserService extends CommonService<User> implements UserServ
     }
 
     @Override
-    public void addFriend(User user, User friend) {
+    public void addFriend(int userId, int friendId) {
+        log.debug(String.format("Добавление в друзья пользователя с ID %d у пользователя %d", friendId, userId));
+        User user = storage
+                .findItem(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
+        User friend = storage
+                .findItem(friendId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", friendId)));
         user.addFriend(friend);
     }
 
     @Override
-    public void removeFriend(User user, User friend) {
+    public void removeFriend(int userId, int friendId) {
+        log.debug(String.format("Удаление друга с ID %d у пользователя %d", friendId, userId));
+        log.debug(String.format("Добавление в друзья пользователя с ID %d у пользователя %d", friendId, userId));
+        User user = storage
+                .findItem(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
+        User friend = storage
+                .findItem(friendId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", friendId)));
         user.removeFriend(friend);
     }
 

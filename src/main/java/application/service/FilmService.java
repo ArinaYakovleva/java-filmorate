@@ -4,7 +4,7 @@ import application.model.Film;
 
 import java.util.Collection;
 
-public interface FilmService extends IService<Film> {
+public interface FilmService extends Service<Film> {
     void likeFilm(int filmId, int userId);
 
     void dislikeFilm(int filmId, int userId);

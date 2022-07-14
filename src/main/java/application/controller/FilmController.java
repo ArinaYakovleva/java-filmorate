@@ -2,25 +2,17 @@ package application.controller;
 
 import application.model.Film;
 import application.service.FilmService;
-import application.service.InMemoryFilmService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import util.exception.CreateException;
-import util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
-
-    @Autowired
-    public FilmController(InMemoryFilmService filmService) {
-        this.filmService = filmService;
-    }
 
     @GetMapping
     public Collection<Film> getFilmsList() {

@@ -1,9 +1,8 @@
 package application.service;
 
 import java.util.Collection;
-import java.util.Optional;
 
-public interface IService<T> {
+public interface Service<T> {
     Collection<T> findAll();
 
     T findItem(int id);

@@ -4,16 +4,14 @@ import application.model.CommonDataModel;
 import application.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.Collection;
-import java.util.Optional;
 
-@Service
+@org.springframework.stereotype.Service
 @Slf4j
-public abstract class CommonService<T extends CommonDataModel> implements IService<T> {
+public abstract class CommonService<T extends CommonDataModel> implements Service<T> {
     protected final Storage<T> storage;
 
     @Autowired
@@ -30,12 +28,12 @@ public abstract class CommonService<T extends CommonDataModel> implements IServi
                 .findItem(id)
                 .orElseThrow(() ->
                         new NotFoundException(String.format("Объект с ID %d не найден", id)));
-   }
+    }
 
     public T createItem(T item) {
         return storage
                 .createItem(item)
-                .orElseThrow(()-> new CreateException("Ошибка создания"));
+                .orElseThrow(() -> new CreateException("Ошибка создания"));
     }
 
     @Override

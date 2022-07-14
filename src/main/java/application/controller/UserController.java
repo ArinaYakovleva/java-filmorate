@@ -2,25 +2,17 @@ package application.controller;
 
 import application.model.User;
 import application.service.InMemoryUserService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import util.exception.CreateException;
-import util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
-@Slf4j
+@RequiredArgsConstructor
 public class UserController {
     private final InMemoryUserService userService;
-
-    @Autowired
-    public UserController(InMemoryUserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public Collection<User> getUsersList() {
@@ -54,10 +46,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
-        log.debug(String.format("Добавление в друзья пользователя с ID %d у пользователя %d", friendId, id));
-        User user = userService.findItem(id);
-        User friend = userService.findItem(friendId);
-        userService.addFriend(user, friend);
+        userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{userId}")
@@ -67,9 +56,6 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
-        log.debug(String.format("Удаление друга с ID %d у пользователя %d", friendId, id));
-        User user = userService.findItem(id);
-        User friend = userService.findItem(friendId);
-        userService.removeFriend(user, friend);
+        userService.removeFriend(id, friendId);
     }
 }
