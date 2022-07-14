@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.model.User;
-import application.service.UserService;
+import application.service.InMemoryUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.util.Collection;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final UserService userService;
+    private final InMemoryUserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(InMemoryUserService userService) {
         this.userService = userService;
     }
 
@@ -29,9 +29,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public User getUser(@PathVariable int userId) {
-        return userService
-                .findItem(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
+        return userService.findItem(userId);
     }
 
     @GetMapping("/{id}/friends")
@@ -46,47 +44,32 @@ public class UserController {
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        log.debug(String.format("Создание пользователя: %s", user.toString()));
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        return userService.createItem(user)
-                .orElseThrow(
-                        () -> new CreateException(String.format("Ошибка при создани пользователя: %s", user.toString())));
+        return userService.createItem(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        log.debug(String.format("Обновление пользователя: %s", user.toString()));
-        return userService.updateItem(user)
-                .orElseThrow(() -> new CreateException(String
-                        .format("Ошибка при обновлении пользователя: %s", user.toString())));
+        return userService.updateItem(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.debug(String.format("Добавление в друзья пользователя с ID %d у пользователя %d", friendId, id));
-        User user = userService.findItem(id).orElseThrow(
-                () -> new NotFoundException(String.format("Пользователь с ID %d не найден", id)));
-        User friend = userService.findItem(friendId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", friendId)));
+        User user = userService.findItem(id);
+        User friend = userService.findItem(friendId);
         userService.addFriend(user, friend);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable int userId) {
-        log.debug(String.format("Удаление пользователя с ID %d", userId));
-        userService.deleteItem(userId).orElseThrow(() ->
-                new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
+        userService.deleteItem(userId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
         log.debug(String.format("Удаление друга с ID %d у пользователя %d", friendId, id));
-        User user = userService.findItem(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", id)));
-        User friend = userService.findItem(friendId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", friendId)));
+        User user = userService.findItem(id);
+        User friend = userService.findItem(friendId);
         userService.removeFriend(user, friend);
     }
 }
