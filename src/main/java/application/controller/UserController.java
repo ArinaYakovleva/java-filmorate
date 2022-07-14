@@ -1,7 +1,6 @@
 package application.controller;
 
 import application.model.User;
-import application.service.InMemoryUserService;
 import application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
