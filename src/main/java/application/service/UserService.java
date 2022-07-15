@@ -5,7 +5,7 @@ import application.model.User;
 import java.util.Collection;
 import java.util.List;
 
-public interface UserService extends Service<User> {
+public interface UserService extends IService<User> {
     void addFriend(int userId, int friendId);
 
     void removeFriend(int userId, int friendId);

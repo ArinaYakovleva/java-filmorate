@@ -4,14 +4,15 @@ import application.model.CommonDataModel;
 import application.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.Collection;
 
-@org.springframework.stereotype.Service
+@Service
 @Slf4j
-public abstract class CommonService<T extends CommonDataModel> implements Service<T> {
+public abstract class CommonService<T extends CommonDataModel> implements IService<T> {
     protected final Storage<T> storage;
 
     @Autowired

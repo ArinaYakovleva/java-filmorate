@@ -2,7 +2,7 @@ package application.service;
 
 import java.util.Collection;
 
-public interface Service<T> {
+public interface IService<T> {
     Collection<T> findAll();
 
     T findItem(int id);
