@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.model.User;
-import application.service.UserService;
+import application.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping
     public Collection<User> getUsersList() {
@@ -32,6 +32,11 @@ public class UserController {
     @GetMapping("/{id}/friends/common/{otherId}")
     public Collection<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
         return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping("/likes/{filmId}")
+    public Collection<User> getFilmLikes(@PathVariable int filmId) {
+        return userService.getFilmLikes(filmId);
     }
 
     @PostMapping

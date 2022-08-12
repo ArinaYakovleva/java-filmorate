@@ -43,7 +43,7 @@ class UserControllerTest {
 
     @Test
     public void birthdayTest() throws Exception {
-        String jsonStr = String.format(formatString, 1, "a@mail.ru", "login", "name", "2022-07-30");
+        String jsonStr = String.format(formatString, 1, "a@mail.ru", "login", "name", "2022-10-30");
         performBadRequest(jsonStr);
     }
 

@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.model.Film;
-import application.service.FilmService;
+import application.service.IFilmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
 @RequestMapping("/films")
 @RequiredArgsConstructor
 public class FilmController {
-    private final FilmService filmService;
+    private final IFilmService filmService;
 
     @GetMapping
     public Collection<Film> getFilmsList() {
