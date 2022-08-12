@@ -12,5 +12,6 @@ public interface IUserService extends IService<User> {
     Collection<User> getUserFriends(int userId);
 
     Collection<User> getCommonFriends(int userId, int friendId);
+
     Collection<User> getFilmLikes(int filmId);
 }

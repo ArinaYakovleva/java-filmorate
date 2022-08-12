@@ -101,7 +101,7 @@ class UserDbStorageTest {
     @Test
     public void removeFriend() {
         userDbStorage.addFriend(1, 2);
-        userDbStorage.removeFriend(1,2);
+        userDbStorage.removeFriend(1, 2);
         Collection<User> friends = userDbStorage.getUserFriends(1);
         Assertions.assertEquals(0, friends.size());
     }
@@ -113,7 +113,7 @@ class UserDbStorageTest {
         userDbStorage.createItem(commonFriend);
         userDbStorage.addFriend(1, 3);
         userDbStorage.addFriend(2, 3);
-        Collection<User> commonFriends = userDbStorage.getCommonFriends(1,2);
+        Collection<User> commonFriends = userDbStorage.getCommonFriends(1, 2);
         Assertions.assertEquals(1, commonFriends.size());
     }
 }

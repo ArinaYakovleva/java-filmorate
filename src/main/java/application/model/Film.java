@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 @Data
@@ -52,6 +55,6 @@ public class Film extends CommonDataModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash( name, description, releaseDate, duration, restriction, genres, likesCount);
+        return Objects.hash(name, description, releaseDate, duration, restriction, genres, likesCount);
     }
 }

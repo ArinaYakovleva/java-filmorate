@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
 
 @Service
 @Slf4j
@@ -44,7 +44,7 @@ public class UserService extends CommonService<User, IUserDbStorage> implements 
     }
 
     @Override
-    public Collection <User> getCommonFriends(int userId, int friendId) {
+    public Collection<User> getCommonFriends(int userId, int friendId) {
         return storage.getCommonFriends(userId, friendId);
     }
 

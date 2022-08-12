@@ -55,8 +55,8 @@ class FilmControllerTest {
 
     private void performBadRequest(String jsonStr) throws Exception {
         mockMvc.perform(post("/films")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(jsonStr)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

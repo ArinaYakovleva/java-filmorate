@@ -49,16 +49,16 @@ class UserControllerTest {
 
     private void performBadRequest(String jsonStr) throws Exception {
         mockMvc.perform(post("/users")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(jsonStr)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     private void performOKRequest(String jsonStr) throws Exception {
         mockMvc.perform(post("/users")
-                .content(jsonStr)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(jsonStr)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

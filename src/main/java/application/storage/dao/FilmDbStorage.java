@@ -14,12 +14,16 @@ import util.exception.NotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
 public class FilmDbStorage implements IFilmDbStorage {
     private final JdbcTemplate jdbcTemplate;
+
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -99,7 +103,7 @@ public class FilmDbStorage implements IFilmDbStorage {
                     item.getDuration(),
                     item.getRestriction().getRestrictionId(),
                     item.getId()
-                    );
+            );
             jdbcTemplate.update(deleteCurrentGenres, item.getId());
             for (Genre genre : item.getGenres()) {
                 jdbcTemplate.update("insert into genres_of_film values(?, ?);", item.getId(), genre.getGenre_id());
@@ -132,7 +136,7 @@ public class FilmDbStorage implements IFilmDbStorage {
         jdbcTemplate.update(dislikeFilmQuery, filmId, userId);
     }
 
-    public Collection<Film> getMostPopularFilms (Integer count) {
+    public Collection<Film> getMostPopularFilms(Integer count) {
         int limit = count == null ? 10 : count;
         String popularFilmsQuery = "select film_id, name, description, release_date, duration, age.RESTRICTION_ID," +
                 " age.restriction_name, (select count(user_id) from likes where film_id=f.film_id) likesCount " +
@@ -151,7 +155,7 @@ public class FilmDbStorage implements IFilmDbStorage {
     public Optional<Genre> getGenreById(int genreId) {
         SqlRowSet genresQuery = jdbcTemplate.queryForRowSet("select * from GENRES where GENRE_ID=?", genreId);
         if (genresQuery.next()) {
-            Genre genre =  new Genre(genresQuery.getInt("genre_id"),
+            Genre genre = new Genre(genresQuery.getInt("genre_id"),
                     genresQuery.getString("genre_name"));
             return Optional.of(genre);
         } else {
@@ -220,10 +224,11 @@ public class FilmDbStorage implements IFilmDbStorage {
 
     private AgeRestriction makeAgeRestriction(ResultSet resultSet) throws SQLException {
         return new AgeRestriction(
-          resultSet.getInt("restriction_id"),
-          resultSet.getString("restriction_name")
+                resultSet.getInt("restriction_id"),
+                resultSet.getString("restriction_name")
         );
     }
+
     private NotFoundException getNotFoundError(int recordID) {
         String errorMessage = String.format("Ошибка доступа к записи, запись с ID %d не найдена", recordID);
         log.error(errorMessage);

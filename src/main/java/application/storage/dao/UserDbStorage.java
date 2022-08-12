@@ -12,7 +12,10 @@ import util.exception.NotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -22,10 +25,11 @@ public class UserDbStorage implements IUserDbStorage {
     public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public Collection<User> findAll() {
-       return jdbcTemplate
-               .query("select * from users;", (rs, rowNum) -> makeUser(rs));
+        return jdbcTemplate
+                .query("select * from users;", (rs, rowNum) -> makeUser(rs));
     }
 
     @Override
@@ -116,10 +120,10 @@ public class UserDbStorage implements IUserDbStorage {
 
     public Collection<User> getUserFriends(int userId) {
         String sqlQuery = "select * from USERS inner join FRIENDS F on USERS.USER_ID = F.USER_ID where F.USER_ID=?;";
-        return jdbcTemplate.query(sqlQuery,(rs, rowNum) -> makeUser(rs), userId);
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), userId);
     }
 
-    public Collection <User> getCommonFriends(int userId, int friendId) {
+    public Collection<User> getCommonFriends(int userId, int friendId) {
         String sqlQuery = "select * from FRIENDS " +
                 "join USERS U on U.USER_ID = FRIENDS.FRIEND_ID " +
                 "where FRIENDS.USER_ID=? and FRIENDS.FRIEND_ID in (select FRIEND_ID from friends where USER_ID = ?)";

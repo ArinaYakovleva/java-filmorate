@@ -28,7 +28,7 @@ class FilmDbStorageTest {
     private static Film testFilm;
 
     @BeforeAll
-    public static void init () {
+    public static void init() {
         LocalDate releaseDate = LocalDate.of(2000, 4, 18);
         AgeRestriction ageRestriction = new AgeRestriction(3, "PG-13");
         Collection<Genre> genres = new ArrayList<>();
@@ -84,13 +84,13 @@ class FilmDbStorageTest {
     @Test
     public void updateFilm() {
         Film film = new Film(
-          "Обновленный",
-          "обновленное",
-          LocalDate.of(2000, 1, 1),
-          120,
-          new AgeRestriction(1, "G"),
-          testFilm.getGenres(),
-          0
+                "Обновленный",
+                "обновленное",
+                LocalDate.of(2000, 1, 1),
+                120,
+                new AgeRestriction(1, "G"),
+                testFilm.getGenres(),
+                0
         );
         film.setId(1);
 
@@ -146,8 +146,8 @@ class FilmDbStorageTest {
     @Test
     public void getRestrictionById() {
         AgeRestriction testRestriction = new AgeRestriction(
-          1,
-          "G"
+                1,
+                "G"
         );
         Optional<AgeRestriction> restriction = filmDbStorage.getAgeRestrictionById(1);
         Assertions.assertEquals(testRestriction, restriction.get());
