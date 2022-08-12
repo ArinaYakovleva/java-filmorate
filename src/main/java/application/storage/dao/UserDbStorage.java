@@ -42,7 +42,7 @@ public class UserDbStorage implements IUserDbStorage {
                     sqlRowSet.getDate("birthday").toLocalDate());
             user.setName(sqlRowSet.getString("name"));
             user.setId(sqlRowSet.getInt("user_id"));
-            log.info(String.format("Найден пользователь: %s", user.toString()));
+            log.info(String.format("Найден пользователь: %s", user));
             return Optional.of(user);
         } else {
             throw getNotFoundError(id);
@@ -137,11 +137,9 @@ public class UserDbStorage implements IUserDbStorage {
         String name = resultSet.getString("name");
         LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
 
-        Set<Integer> friends = getUserFriendsById(id);
         User user = new User(email, login, birthday);
         user.setName(name);
         user.setId(id);
-        user.setFriends(friends);
         return user;
     }
 
