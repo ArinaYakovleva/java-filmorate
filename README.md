@@ -1,2 +1,6 @@
-# java-filmorate
-Template repository for Filmorate project.
+# Filmorate
+Приложение для рекомендаций Фильмов
+
+Схема БД:
+
+<img src="FILMORATE.png">
