@@ -1,9 +1,17 @@
 package application.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class AgeRestriction {
-    private final int restrictionId;
-    private final String restrictionName;
+    private int id;
+    private String name;
+
+    @JsonCreator
+    public AgeRestriction(int id) {
+        this.id = id;
+    }
 }

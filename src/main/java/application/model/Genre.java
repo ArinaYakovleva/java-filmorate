@@ -1,9 +1,17 @@
 package application.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class Genre {
-    private final int genre_id;
-    private final String genre_name;
+    private int id;
+    private String name;
+
+    @JsonCreator
+    public Genre(int id) {
+        this.id = id;
+    }
 }

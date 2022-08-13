@@ -13,9 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 @Slf4j
@@ -63,18 +61,17 @@ public class UserDbStorage implements IUserDbStorage {
     @Override
     public Optional<User> updateItem(User item) {
         String sqlQuery = "update users set email=?, login=?, name=?, birthday=? where user_id=?";
-        try {
-            jdbcTemplate.update(sqlQuery,
-                    item.getEmail(),
-                    item.getLogin(),
-                    item.getName(),
-                    item.getBirthday(),
-                    item.getId()
-            );
-            return Optional.of(item);
-        } catch (DataAccessException e) {
-            throw getNotFoundError(item.getId());
+        int result = jdbcTemplate.update(sqlQuery,
+                item.getEmail(),
+                item.getLogin(),
+                item.getName(),
+                item.getBirthday(),
+                item.getId()
+        );
+        if (result == 0) {
+            return Optional.empty();
         }
+        return Optional.of(item);
     }
 
     @Override
@@ -119,12 +116,14 @@ public class UserDbStorage implements IUserDbStorage {
     }
 
     public Collection<User> getUserFriends(int userId) {
-        String sqlQuery = "select * from USERS inner join FRIENDS F on USERS.USER_ID = F.USER_ID where F.USER_ID=?;";
+        String sqlQuery = "select u.USER_ID, u.EMAIL, u.LOGIN, u.NAME, u.BIRTHDAY from FRIENDS as f " +
+                "join USERS U on U.USER_ID = f.FRIEND_ID " +
+                "where f.USER_ID=?;";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), userId);
     }
 
     public Collection<User> getCommonFriends(int userId, int friendId) {
-        String sqlQuery = "select * from FRIENDS " +
+        String sqlQuery = "select u.USER_ID, u.EMAIL, u.LOGIN, u.NAME, u.BIRTHDAY from FRIENDS " +
                 "join USERS U on U.USER_ID = FRIENDS.FRIEND_ID " +
                 "where FRIENDS.USER_ID=? and FRIENDS.FRIEND_ID in (select FRIEND_ID from friends where USER_ID = ?)";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), userId, friendId);
@@ -141,16 +140,6 @@ public class UserDbStorage implements IUserDbStorage {
         user.setName(name);
         user.setId(id);
         return user;
-    }
-
-    private Set<Integer> getUserFriendsById(int id) {
-        Set<Integer> friendsIds = new HashSet<>();
-        SqlRowSet friendsRowSet = jdbcTemplate.queryForRowSet("select f.friend_id from users as u " +
-                "join friends as f on f.user_id = u.user_id where u.user_id=?;", id);
-        while (friendsRowSet.next()) {
-            friendsIds.add(friendsRowSet.getInt("friend_id"));
-        }
-        return friendsIds;
     }
 
     private NotFoundException getNotFoundError(int recordID) {

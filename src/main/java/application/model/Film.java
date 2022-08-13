@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Data
@@ -29,11 +29,11 @@ public class Film extends CommonDataModel {
     @Positive
     private final int duration;
 
-    private final AgeRestriction restriction;
+    private final AgeRestriction mpa;
 
-    private final Collection<Genre> genres;
+    private final Set<Genre> genres;
 
-    private final int likesCount;
+    private final int rate;
 
     public Map<String, Object> toMap(Integer restrictionId) {
         Map<String, Object> map = new HashMap<>();
@@ -50,11 +50,13 @@ public class Film extends CommonDataModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Film film = (Film) o;
-        return duration == film.duration && likesCount == film.likesCount && Objects.equals(name, film.name) && Objects.equals(description, film.description) && Objects.equals(releaseDate, film.releaseDate) && Objects.equals(restriction, film.restriction) && Objects.equals(genres, film.genres);
+        return duration == film.duration && rate == film.rate && Objects.equals(name, film.name) &&
+                Objects.equals(description, film.description) && Objects.equals(releaseDate, film.releaseDate) &&
+                Objects.equals(mpa, film.mpa) && Objects.equals(genres, film.genres);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, releaseDate, duration, restriction, genres, likesCount);
+        return Objects.hash(name, description, releaseDate, duration, mpa, genres, rate);
     }
 }

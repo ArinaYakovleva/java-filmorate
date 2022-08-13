@@ -30,9 +30,9 @@ class FilmDbStorageTest {
     @BeforeAll
     public static void init() {
         LocalDate releaseDate = LocalDate.of(2000, 4, 18);
-        AgeRestriction ageRestriction = new AgeRestriction(3, "PG-13");
+        AgeRestriction ageRestriction = new AgeRestriction(3);
         Collection<Genre> genres = new ArrayList<>();
-        genres.add(new Genre(2, "Драма"));
+        genres.add(new Genre(2));
 
         testFilm = new Film("Зеленая миля", "В тюрьме для смертников " +
                 "появляется заключенный с божественным даром", releaseDate,
@@ -63,9 +63,9 @@ class FilmDbStorageTest {
     @Test
     public void createFilm() {
         Collection<Genre> genres = new ArrayList<>();
-        genres.add(new Genre(1, "Мелодрама"));
+        genres.add(new Genre(1));
         LocalDate releaseDate = LocalDate.of(2000, 2, 2);
-        AgeRestriction restriction = new AgeRestriction(1, "G");
+        AgeRestriction restriction = new AgeRestriction(1);
         Film film = new Film(
                 "Тест фильм",
                 "тест описание",
@@ -88,7 +88,7 @@ class FilmDbStorageTest {
                 "обновленное",
                 LocalDate.of(2000, 1, 1),
                 120,
-                new AgeRestriction(1, "G"),
+                new AgeRestriction(1),
                 testFilm.getGenres(),
                 0
         );
@@ -105,7 +105,7 @@ class FilmDbStorageTest {
                 "обновленное",
                 LocalDate.of(2000, 1, 1),
                 120,
-                new AgeRestriction(1, "G"),
+                new AgeRestriction(1),
                 testFilm.getGenres(),
                 0
         );
@@ -124,7 +124,7 @@ class FilmDbStorageTest {
 
     @Test
     public void getGenreById() {
-        Genre testGenre = new Genre(1, "Мелодрама");
+        Genre testGenre = new Genre(1);
         Optional<Genre> genre = filmDbStorage.getGenreById(1);
         Assertions.assertEquals(testGenre, genre.get());
     }
@@ -145,10 +145,7 @@ class FilmDbStorageTest {
 
     @Test
     public void getRestrictionById() {
-        AgeRestriction testRestriction = new AgeRestriction(
-                1,
-                "G"
-        );
+        AgeRestriction testRestriction = new AgeRestriction(1);
         Optional<AgeRestriction> restriction = filmDbStorage.getAgeRestrictionById(1);
         Assertions.assertEquals(testRestriction, restriction.get());
     }
@@ -172,18 +169,18 @@ class FilmDbStorageTest {
     public void likeFilm() {
         filmDbStorage.likeFilm(1, 1);
         Optional<Film> film = filmDbStorage.findItem(1);
-        Assertions.assertEquals(1, film.get().getLikesCount());
+        Assertions.assertEquals(1, film.get().getRate());
     }
 
     @Test
     public void dislikeFilm() {
         filmDbStorage.likeFilm(1, 1);
         Optional<Film> film = filmDbStorage.findItem(1);
-        Assertions.assertEquals(1, film.get().getLikesCount());
+        Assertions.assertEquals(1, film.get().getRate());
 
         filmDbStorage.dislikeFilm(1, 1);
         Optional<Film> dislikedFilm = filmDbStorage.findItem(1);
-        Assertions.assertEquals(0, dislikedFilm.get().getLikesCount());
+        Assertions.assertEquals(0, dislikedFilm.get().getRate());
     }
 
     @Test

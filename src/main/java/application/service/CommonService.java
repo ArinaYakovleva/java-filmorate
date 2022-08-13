@@ -7,6 +7,7 @@ import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 public abstract class CommonService<T extends CommonDataModel, K extends Storage<T>> implements IService<T> {
@@ -35,10 +36,12 @@ public abstract class CommonService<T extends CommonDataModel, K extends Storage
 
     @Override
     public T updateItem(T item) {
+        Optional<T> user = storage.updateItem(item);
+        if (user.isEmpty()) {
+            throw new NotFoundException(String.format("Пользователь с ID %d не найден", item.getId()));
+        }
         log.debug(String.format("Обновление фильма: %s", item.toString()));
-        return storage
-                .updateItem(item)
-                .orElseThrow(() -> new CreateException(String.format("Ошибка при обновлении %s", item)));
+        return user.get();
     }
 
     public void deleteItem(int id) {
