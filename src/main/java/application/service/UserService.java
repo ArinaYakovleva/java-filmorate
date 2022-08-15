@@ -47,9 +47,4 @@ public class UserService extends CommonService<User, IUserDbStorage> implements 
     public Collection<User> getCommonFriends(int userId, int friendId) {
         return storage.getCommonFriends(userId, friendId);
     }
-
-    @Override
-    public Collection<User> getFilmLikes(int filmId) {
-        return storage.getFilmLikes(filmId);
-    }
 }

@@ -1,22 +1,23 @@
 package application.service;
 
-import application.model.AgeRestriction;
 import application.model.Film;
-import application.model.Genre;
+import application.model.User;
 import application.storage.dao.IFilmDbStorage;
+import application.storage.dao.IUserDbStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import util.exception.NotFoundException;
 
 import java.util.Collection;
 
 @Service
 @Slf4j
 public class FilmService extends CommonService<Film, IFilmDbStorage> implements IFilmService {
+    private final IUserDbStorage userDbStorage;
     @Autowired
-    public FilmService(IFilmDbStorage storage) {
+    public FilmService(IFilmDbStorage storage, IUserDbStorage userDbStorage) {
         super(storage);
+        this.userDbStorage = userDbStorage;
     }
 
     @Override
@@ -37,24 +38,7 @@ public class FilmService extends CommonService<Film, IFilmDbStorage> implements 
     }
 
     @Override
-    public Collection<AgeRestriction> getAgeRestrictions() {
-        return storage.getAgeRestrictions();
-    }
-
-    @Override
-    public AgeRestriction getAgeRestrictionById(int id) {
-        return storage.getAgeRestrictionById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("MPA c ID %d не найден", id)));
-    }
-
-    @Override
-    public Collection<Genre> getGenres() {
-        return storage.getGenres();
-    }
-
-    @Override
-    public Genre getGenreById(int genreId) {
-        return storage.getGenreById(genreId)
-                .orElseThrow(() -> new NotFoundException(String.format("Жанр с ID %d не найден", genreId)));
+    public Collection<User> getFilmLikes(int filmId) {
+        return userDbStorage.getFilmLikes(filmId);
     }
 }

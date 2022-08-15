@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.model.AgeRestriction;
-import application.service.IFilmService;
+import application.service.IMPAService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,15 +14,15 @@ import java.util.Collection;
 @RequestMapping("/mpa")
 @RequiredArgsConstructor
 public class MPAController {
-    private final IFilmService filmService;
+    private final IMPAService mpaService;
 
     @GetMapping
     public Collection<AgeRestriction> getAllRestrictions() {
-        return filmService.getAgeRestrictions();
+        return mpaService.getAgeRestrictions();
     }
 
     @GetMapping("/{id}")
     public AgeRestriction getRestrictionById(@PathVariable int id) {
-        return filmService.getAgeRestrictionById(id);
+        return mpaService.getAgeRestrictionById(id);
     }
 }

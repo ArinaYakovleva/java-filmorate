@@ -19,7 +19,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class FilmDbStorage implements IFilmDbStorage {
+public class FilmDbStorage extends CommonDbStorage implements IFilmDbStorage {
     private final JdbcTemplate jdbcTemplate;
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
@@ -160,45 +160,6 @@ public class FilmDbStorage implements IFilmDbStorage {
         return jdbcTemplate.query(popularFilmsQuery, (rs, rowNum) -> makeFilm(rs), limit);
     }
 
-    public Collection<Genre> getGenres() {
-        String genresQuery = "select * from genres;";
-        return jdbcTemplate.query(genresQuery, (rs, rowNum) ->
-                new Genre(rs.getInt("genre_id"), rs.getString("genre_name")));
-    }
-
-    public Optional<Genre> getGenreById(int genreId) {
-        SqlRowSet genresQuery = jdbcTemplate.queryForRowSet("select * from GENRES where GENRE_ID=?", genreId);
-        if (genresQuery.next()) {
-            Genre genre = new Genre(genresQuery.getInt("genre_id"), genresQuery.getString("genre_name"));
-            return Optional.of(genre);
-        } else {
-            throw getNotFoundError(genreId);
-        }
-    }
-
-    public Collection<AgeRestriction> getAgeRestrictions() {
-        String restrictionsQuery = "select * from age_restrictions";
-        return jdbcTemplate.query(restrictionsQuery, (rs, rowNum) ->
-                new AgeRestriction(
-                        rs.getInt("restriction_id"),
-                        rs.getString("restriction_name"))
-        );
-    }
-
-    public Optional<AgeRestriction> getAgeRestrictionById(int id) {
-        SqlRowSet restrictionsQuery = jdbcTemplate.queryForRowSet("select  * from AGE_RESTRICTIONS " +
-                "where RESTRICTION_ID=?", id);
-        if (restrictionsQuery.next()) {
-            AgeRestriction ageRestriction = new AgeRestriction(
-                    restrictionsQuery.getInt("restriction_id"),
-                    restrictionsQuery.getString("restriction_name")
-            );
-            return Optional.of(ageRestriction);
-        } else {
-            throw getNotFoundError(id);
-        }
-    }
-
     private Film makeFilm(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("film_id");
         String restrictionName = resultSet.getString("restriction_name");
@@ -230,11 +191,5 @@ public class FilmDbStorage implements IFilmDbStorage {
             genres.add(new Genre(genreId, genreName));
         }
         return genres;
-    }
-
-    private NotFoundException getNotFoundError(int recordID) {
-        String errorMessage = String.format("Ошибка доступа к записи, запись с ID %d не найдена", recordID);
-        log.error(errorMessage);
-        return new NotFoundException(errorMessage);
     }
 }

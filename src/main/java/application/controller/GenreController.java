@@ -2,6 +2,7 @@ package application.controller;
 
 import application.model.Genre;
 import application.service.IFilmService;
+import application.service.IGenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,15 +15,15 @@ import java.util.Collection;
 @RequestMapping("/genres")
 @RequiredArgsConstructor
 public class GenreController {
-    private final IFilmService filmService;
+    private final IGenreService genreService;
 
     @GetMapping
-    Collection<Genre> getGenres() {
-        return filmService.getGenres();
+    public Collection<Genre> getGenres() {
+        return genreService.getGenres();
     }
 
     @GetMapping("/{id}")
     public Genre getGenreById(@PathVariable int id) {
-        return filmService.getGenreById(id);
+        return genreService.getGenreById(id);
     }
 }

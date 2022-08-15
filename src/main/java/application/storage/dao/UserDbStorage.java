@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class UserDbStorage implements IUserDbStorage {
+public class UserDbStorage extends CommonDbStorage implements IUserDbStorage{
     private final JdbcTemplate jdbcTemplate;
 
     public UserDbStorage(JdbcTemplate jdbcTemplate) {
@@ -140,11 +140,5 @@ public class UserDbStorage implements IUserDbStorage {
         user.setName(name);
         user.setId(id);
         return user;
-    }
-
-    private NotFoundException getNotFoundError(int recordID) {
-        String errorMessage = String.format("Ошибка доступа к записи, запись с ID %d не найдена", recordID);
-        log.error(errorMessage);
-        return new NotFoundException(errorMessage);
     }
 }

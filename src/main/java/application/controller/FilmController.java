@@ -1,6 +1,7 @@
 package application.controller;
 
 import application.model.Film;
+import application.model.User;
 import application.service.IFilmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,10 @@ public class FilmController {
         return filmService.getMostPopularFilms(count);
     }
 
+    @GetMapping("/{filmId}/likes")
+    public  Collection<User> getFilmLikes(@PathVariable int filmId) {
+        return filmService.getFilmLikes(filmId);
+    }
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {

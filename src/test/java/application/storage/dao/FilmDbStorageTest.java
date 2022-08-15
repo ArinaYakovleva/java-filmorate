@@ -53,7 +53,7 @@ class FilmDbStorageTest {
     @Test
     public void getFilmNotFoundById() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            Optional<Film> film = filmDbStorage.findItem(3);
+            filmDbStorage.findItem(3);
         });
         Assertions.assertEquals("Ошибка доступа к записи, запись с ID 3 не найдена", exception.getMessage());
     }
@@ -109,51 +109,8 @@ class FilmDbStorageTest {
         );
         film.setId(3);
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
-            Optional<Film> updated = filmDbStorage.updateItem(film);
+            filmDbStorage.updateItem(film);
         });
-        //Assertions.assertEquals("Ошибка доступа к записи, запись с ID 3 не найдена", exception.getMessage());
-    }
-
-    @Test
-    public void getGenres() {
-        Collection<Genre> genres = filmDbStorage.getGenres();
-        Assertions.assertEquals(6, genres.size());
-    }
-
-    @Test
-    public void getGenreById() {
-        Genre testGenre = new Genre(1);
-        Optional<Genre> genre = filmDbStorage.getGenreById(1);
-        Assertions.assertEquals(testGenre, genre.get());
-    }
-
-    @Test
-    public void getGenreByIdNotFound() {
-        NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            Optional<Genre> genre = filmDbStorage.getGenreById(100);
-        });
-        Assertions.assertEquals("Ошибка доступа к записи, запись с ID 100 не найдена", exception.getMessage());
-    }
-
-    @Test
-    public void getRestrictions() {
-        Collection<AgeRestriction> restrictions = filmDbStorage.getAgeRestrictions();
-        Assertions.assertEquals(5, restrictions.size());
-    }
-
-    @Test
-    public void getRestrictionById() {
-        AgeRestriction testRestriction = new AgeRestriction(1);
-        Optional<AgeRestriction> restriction = filmDbStorage.getAgeRestrictionById(1);
-        Assertions.assertEquals(testRestriction, restriction.get());
-    }
-
-    @Test
-    public void getRestrictionIfNotFound() {
-        NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            Optional<AgeRestriction> restriction = filmDbStorage.getAgeRestrictionById(20);
-        });
-        Assertions.assertEquals("Ошибка доступа к записи, запись с ID 20 не найдена", exception.getMessage());
     }
 
     @Test

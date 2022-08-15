@@ -34,11 +34,6 @@ public class UserController {
         return userService.getCommonFriends(id, otherId);
     }
 
-    @GetMapping("/likes/{filmId}")
-    public Collection<User> getFilmLikes(@PathVariable int filmId) {
-        return userService.getFilmLikes(filmId);
-    }
-
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         return userService.createItem(user);
