@@ -11,6 +11,6 @@ public interface IService<T> {
 
     T updateItem(T item);
 
-    T deleteItem(int id);
+    void deleteItem(int id);
 
 }

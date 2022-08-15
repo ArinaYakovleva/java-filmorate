@@ -1,7 +1,6 @@
 package application.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import util.constraint.ReleaseDateConstraint;
 
 import javax.validation.constraints.NotEmpty;
@@ -9,36 +8,53 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+
 @Data
 public class Film extends CommonDataModel {
-    protected Set<Integer> likedBy = new HashSet<>();
-
     @NotNull(message = "Поле name не должно быть пустым")
     @NotEmpty
-    private String name;
+    private final String name;
 
     @Size(max = 200)
-    private String description;
+    private final String description;
 
     @ReleaseDateConstraint
-    private LocalDate releaseDate;
+    private final LocalDate releaseDate;
 
     @Positive
-    private int duration;
+    private final int duration;
 
-    public void likeFilm(int id) {
-        likedBy.add(id);
+    private final AgeRestriction mpa;
+
+    private final Set<Genre> genres;
+
+    private final int rate;
+
+    public Map<String, Object> toMap(Integer restrictionId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("description", description);
+        map.put("release_date", releaseDate);
+        map.put("duration", duration);
+        map.put("restriction_id", restrictionId);
+        return map;
     }
 
-    public void dislikeFilm(int id) {
-        likedBy.remove(id);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return duration == film.duration && rate == film.rate && Objects.equals(name, film.name) && Objects.equals(description, film.description) && Objects.equals(releaseDate, film.releaseDate) && Objects.equals(mpa, film.mpa) && Objects.equals(genres, film.genres);
     }
 
-    public int getLikesCount() {
-        return likedBy.size();
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, releaseDate, duration, mpa, genres, rate);
     }
 }

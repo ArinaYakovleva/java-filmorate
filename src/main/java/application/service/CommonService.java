@@ -3,20 +3,17 @@ package application.service;
 import application.model.CommonDataModel;
 import application.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import util.exception.CreateException;
 import util.exception.NotFoundException;
 
 import java.util.Collection;
+import java.util.Optional;
 
-@Service
 @Slf4j
-public abstract class CommonService<T extends CommonDataModel> implements IService<T> {
-    protected final Storage<T> storage;
+public abstract class CommonService<T extends CommonDataModel, K extends Storage<T>> implements IService<T> {
+    protected final K storage;
 
-    @Autowired
-    public CommonService(Storage<T> storage) {
+    public CommonService(K storage) {
         this.storage = storage;
     }
 
@@ -39,20 +36,17 @@ public abstract class CommonService<T extends CommonDataModel> implements IServi
 
     @Override
     public T updateItem(T item) {
-        log.debug(String.format("Обновление фильма: %s", item.toString()));
-        if (!storage.findItem(item.getId()).isPresent()) {
+        Optional<T> user = storage.updateItem(item);
+        if (user.isEmpty()) {
             throw new NotFoundException(String.format("Пользователь с ID %d не найден", item.getId()));
         }
-        return storage
-                .updateItem(item)
-                .orElseThrow(() -> new CreateException(String.format("Ошибка при обновлении %s", item)));
+        log.debug(String.format("Обновление фильма: %s", item.toString()));
+        return user.get();
     }
 
-    public T deleteItem(int id) {
+    public void deleteItem(int id) {
         log.debug(String.format("Удаления фильма с ID %d", id));
-        return storage
-                .delete(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Фильм с ID %d не найден", id)));
+        storage.delete(id);
     }
 }
 

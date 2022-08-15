@@ -1,47 +1,50 @@
 package application.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
 public class User extends CommonDataModel {
-    protected Set<Integer> friends = new HashSet<>();
-
     @Email(message = "Email должен быть валидным")
     @NotEmpty(message = "Поле email не должно быть пустым")
-    private String email;
+    private final String email;
 
     @NotBlank(message = "Поле login не может содержать пробелы")
     @NotEmpty(message = "Поле login не должно быть пустым")
-    private String login;
+    private final String login;
 
     private String name;
 
     @Past(message = "Дата рождения не должна быть больше текущей")
-    private LocalDate birthday;
+    private final LocalDate birthday;
 
-    public void addFriend(User friend) {
-        friends.add(friend.getId());
-        friend.friends.add(this.getId());
+    public Map<String, Object> toMap() {
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("email", email);
+        userMap.put("login", login);
+        userMap.put("name", name);
+        userMap.put("birthday", birthday);
+        return userMap;
     }
 
-    public void removeFriend(User friend) {
-        friends.remove(friend.getId());
-        friend.friends.remove(this.getId());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(email, user.email) && Objects.equals(login, user.login) && Objects.equals(name, user.name) && Objects.equals(birthday, user.birthday);
     }
 
-    public Set<Integer> getFriends() {
-        return friends;
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, login, name, birthday);
     }
 }

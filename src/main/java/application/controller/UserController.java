@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.model.User;
-import application.service.UserService;
+import application.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping
     public Collection<User> getUsersList() {

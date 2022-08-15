@@ -12,5 +12,5 @@ public interface Storage<T> {
 
     Optional<T> updateItem(T item);
 
-    Optional<T> delete(int id);
+    void delete(int id);
 }
